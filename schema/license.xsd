@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.spdx.org/ListedLicense" xmlns:tns="http://www.spdx.org/ListedLicense" elementFormDefault="qualified">
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.spdx.org/license" xmlns:tns="http://www.spdx.org/license" xmlns:xhtml="https://www.w3.org/2002/08/xhtml/xhtml1-strict.xsd" elementFormDefault="qualified">
+    <import namespace="https://www.w3.org/2002/08/xhtml/xhtml1-strict.xsd"/>
+
     <annotation>
         <documentation xml:lang="en">
             XML Schema for the SPDX Listed License input format.  This format is intended for internal use
@@ -9,73 +11,55 @@
             Licensed under CC-BY-4.0.
         </documentation>
     </annotation>
-    <element name="SPDXLicenseCollection"
-      type="tns:SPDXLicenseCollectionType">
+    <element name="LicenseCollection"
+      type="tns:LicenseCollectionType">
     </element>
 
-    <complexType name="ListedLicenseType">
+    <complexType name="LicenseCollectionType">
+      <sequence>
+        <element name="license" type="tns:licenseType" minOccurs="1" maxOccurs="unbounded" />
+      </sequence>
+    </complexType>
 
+    <complexType name="licenseType">
       <all>
-        <element name="crossRefs" type="tns:crossRefsType"
-          maxOccurs="1" minOccurs="0">
-        </element>
-        <element name="notes" type="string" maxOccurs="1"
-          minOccurs="0">
-        </element>
-        <element name="standardLicenseHeader" type="string"
-          maxOccurs="1" minOccurs="0">
-        </element>
-        <element name="titleText" type="string" maxOccurs="1"
-          minOccurs="0">
-        </element>
-        <element name="copyrightText" type="string" maxOccurs="1"
-          minOccurs="0">
-        </element>
-        <element name="bullet" type="tns:formattedTextType">
-        </element>
-        <element name="list" type="tns:listType">
-        </element>
+        <element name="crossRefs" type="tns:crossRefsType" minOccurs="0" maxOccurs="1" />
+        <element name="notes" type="string" minOccurs="0" maxOccurs="1" />
+        <element name="standardLicenseHeader" type="tns:templateType" minOccurs="0" maxOccurs="1" />
+        <element name="copyrightText" type="string" minOccurs="0" maxOccurs="1" />
+        <element name="licenseText" type="tns:licenseTextType" />
       </all>
-      <attribute name="licenseId" type="string">
-      </attribute>
-      <attribute name="isOsiApproved" type="boolean">
-      </attribute>
-      <attribute name="name" type="string">
-      </attribute>
+      <attribute name="licenseId" type="string" />
+      <attribute name="isOsiApproved" type="boolean" />
+      <attribute name="name" type="string" />
     </complexType>
 
     <complexType name="crossRefsType">
       <sequence>
-        <element name="crossRef" type="string" maxOccurs="unbounded" minOccurs="1">
-        </element>
+        <element name="crossRef" type="string" minOccurs="1" maxOccurs="unbounded" />
       </sequence>
     </complexType>
 
-    <complexType name="SPDXLicenseCollectionType">
+    <complexType name="licenseTextType">
       <sequence>
-        <element name="license" type="tns:ListedLicenseType" maxOccurs="unbounded" minOccurs="1">
-        </element>
+        <element name="title" type="tns:templateType" minOccurs="0" maxOccurs="1" />
+        <element name="body" type="tns:templateType" minOccurs="1" maxOccurs="1" />
+        <element name="appendix" type="tns:templateType" minOccurs="0" maxOccurs="1" />
       </sequence>
     </complexType>
 
-    <complexType name="listType">
-      <sequence>
-        <element name="item" type="tns:formattedTextType" maxOccurs="unbounded" minOccurs="1">
-        </element>
-        </sequence>
-    </complexType>
-
-    <complexType name="formattedTextType">
+    <complexType name="templateType" mixed="true">
       <choice>
-        <element name="bullet" type="string">
-        </element>
-        <element name="list" type="tns:listType">
-        </element>
+        <element name="alt" type="tns:altType" />
+        <element name="optional" type="tns:templateType" />
+        <element name="optional" type="tns:templateType" />
+        <element ref="xhtml:Flow" />
       </choice>
     </complexType>
 
-    <group name="licenseElementGroup">
-      <all>
-      </all>
-    </group>
+    <complexType name="altType" mixed="true">
+      <attribute name="name" type="string" />
+      <attribute name="match" type="string" />
+    </complexType>
+
 </schema>
